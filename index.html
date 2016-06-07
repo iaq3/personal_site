@@ -25,10 +25,9 @@
     <input name="Submit"  type="submit" value="New User Profile" >
     <input type="text" id="myVal" placeholder="Add some text&hellip;">
   </form>
-<script src="../sarahs/d3.v3.min.js"></script>  <!-- pulls the whole d3 library into our server instance -->
+<script src="../personal_site/d3.v3.min.js"></script>  <!-- pulls the whole d3 library into our server instance -->
 <!-- //d3js.org/d3.v3.min.js  this is from a different server, probably slower-->
 <!--../sarahs/d3.v3.min.js put this in above instead to run the local minimal d3, which does not require internet-->
-<script src="dijkstra.js"></script> <!-- nearest point that is in group 1. will find shortest path  -->
 <script>
 
 console.log("Starting new script")
@@ -248,17 +247,12 @@ d3.json("skills.json", function(error, json) {
           user.profile.upper_strength = d.us
         force.start()
 
-        //reset leaf counts and intermediate nodes and call dijkstra for each goal node
-        dijkstra_reset()
-        currentGoals.forEach(function(goal) {
-          dijkstra_click(goal, true)
-        })
+      
       }
       d3.select(this).style("fill", node_color); // <----- call to update color of node
     } else if (current_mode == SELECT_TARGET_MODE) {
       //find nearest known skill
       if (d.group == SELECT_TARGET_MODE) {
-        dijkstra_click(d, false)
 
         //delete the goal from the list by iterating through and adding everything else
         var newGoals = []
@@ -283,8 +277,7 @@ d3.json("skills.json", function(error, json) {
         })
         if (!inList)
           currentGoals.push(d)
-        
-        dijkstra_click(d, true)
+
         //update path from closest known by distance... calls djikstras algorithm
         //get edges then update color of edges and nodes:: n.group = INTER_SKILL_MODE...
       }
@@ -314,7 +307,7 @@ d3.json("skills.json", function(error, json) {
     })
     user.profile.goal_skills.forEach(function(gn) {
       json.nodes[gn].group = SELECT_TARGET_MODE
-      dijkstra_click( json.nodes[gn], true)
+    
     })
   }
   
@@ -403,15 +396,6 @@ d3.json("skills.json", function(error, json) {
     return 1;
   }
 
-  /*function handleFormClick(event) {
-    console.log(document.getElementById("myVal").value)
-    complete_reset()
-    force.stop()
-    load_user_profile("isaac_profile.json")
-    force.start()
-    draw_user_profile()
-    return false
-  }*/
 
   function isKnownPoint(node) {
     if (node.group == SELECT_KNOWN_SKILL_MODE) {
@@ -420,23 +404,9 @@ d3.json("skills.json", function(error, json) {
     return false
   }
 
-  //********************** Dijkstra Setup functions *******************************
-  dijkstra_initial_setup();
   draw_user_profile();
-  function dijkstra_initial_setup() {
-    node.each(function(n, ni) {
-      n.links = []
-      n.leaf_count = 0
-      n.index = ni
-    })
-    link.each(function(l, li) {
-      l.leaf_count = 0
-      l.index = li
-      var new_link = {"source": l.source.index, "target": l.target.index, "value": l.value, "index": l.index}
-      json.nodes[l.source.index].links.push(new_link)
-      json.nodes[l.target.index].links.push(new_link)
-    })
-  }
+
+ 
 
   function complete_reset() {
     node.each(function(d) {
@@ -449,86 +419,10 @@ d3.json("skills.json", function(error, json) {
     })
   }
 
-  function dijkstra_reset() {
-    node.each(function(d) {
-      d.leaf_count = 0
-      if (d.group == SELECT_INTER_SKILL_MODE)
-        d.group = 0
-    })
-    link.each(function(l) {
-      l.leaf_count = 0
-      l.opacity = .3
-    })
-  }
-
-  function dijkstra_precall_setup(sourceindex) {
-      //console.log(d.rnasdfas)
-      node.each(function(d) {
-        d.dist = Infinity; 
-      })
-      json.nodes[sourceindex].dist = 0
-  }
 
 
-  //called by node_click if the red color is set to a node. 
-  function dijkstra_click (d, selectingTarget) { 
-  
-      dijkstra_precall_setup(d.index)
 
-      //returns the indeces of the path from this goal to a known, if empty, nothing is found
-      var inter_path = dijkstra( json.nodes, json.nodes[d.index], [json.nodes[d.index]], isKnownPoint)
-
-      var lastNodeIndex = -1;
-      inter_path.forEach(function(ni) {
-
-        //not beginning or end, so increment leaf count
-        if (json.nodes[ni].group != SELECT_KNOWN_SKILL_MODE && selectingTarget) {
-          if (json.nodes[ni].group == 0)
-            json.nodes[ni].group = SELECT_INTER_SKILL_MODE;
-          //if (json.nodes[ni].group == 0 || json.nodes[ni].group == SELECT_INTER_SKILL_MODE)
-          json.nodes[ni].leaf_count += 1
-        } 
-        if (json.nodes[ni].group != SELECT_KNOWN_SKILL_MODE && !selectingTarget) {
-          json.nodes[ni].leaf_count -= 1
-          if (json.nodes[ni].leaf_count <= 0) {
-            json.nodes[ni].group = 0;
-            json.nodes[ni].leaf_count = 0
-          }
-        }
-
-        //this looks through each node's links to find the current one so we can highlight it too.
-        //ignoring the first one because there is no edge from previous to current
-        if (lastNodeIndex > -1) {
-          json.nodes[ni].links.forEach(function(l) {
-            var currentLink = l.source == ni && lastNodeIndex == l.target;
-            currentLink = currentLink || (l.target == ni && lastNodeIndex == l.source);
-            if (currentLink) { //this edge needs to be highlighted
-              if (selectingTarget) {
-                json.links[l.index].opacity = 1
-                json.links[l.index].leaf_count += 1
-              } else {
-                json.links[l.index].leaf_count -= 1
-                if (json.links[l.index].leaf_count <= 0) {
-                  json.links[l.index].opacity = .3
-                  json.links[l.index].leaf_count = 0
-                }
-              }
-            }
-          })
-        }
-        
-
-        lastNodeIndex = ni;
-
-        //move coloring here
-        //add other transitions
-        //put delay, this will add nice effect 
-      })
-      d3.selectAll("line").style("opacity", function(l){return l.opacity})
-      d3.selectAll("circle").style("fill", node_color);
-      d3.selectAll("circle").style("opacity", node_opacity);
-  }
-  
+ 
 
   //**************** initially places nodes using force after everything has been set up
   force.on("tick", function() { 
