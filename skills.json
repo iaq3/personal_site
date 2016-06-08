@@ -36,7 +36,7 @@
         {"source":4,"target":7,"value":1, "index":15, "uf":100, "lf":0, "us":0, "ls":0, "opacity":0.3},
         {"source":4,"target":8,"value":1, "index":15, "uf":100, "lf":0, "us":0, "ls":0, "opacity":0.3},
         {"source":9,"target":10,"value":1, "index":15, "uf":100, "lf":0, "us":0, "ls":0, "opacity":0.3},
-        {"source":9,"target":11,"value":1, "index":15, "uf":100, "lf":0, "us":0, "ls":0, "opacity":0.3},
+        {"source":9,"target":11,"value":1, "index":15, "uf":100, "lf":0, "us":0, "ls":0, "opacity":0.3}
     ],
     "user":{
         "upper_flexibility":20,
@@ -48,6 +48,6 @@
         {"num":1, "name":"Select Known Skill", "color":"yellow"},
         {"num":2, "name":"Select Intermediary Skill", "color":"orange"},
         {"num":3, "name":"Select Goal Skill", "color":"red"},
-        {"num":4, "name":"Explore", "color":"magenta"},
+        {"num":4, "name":"Explore", "color":"magenta"}
     ]
 }
