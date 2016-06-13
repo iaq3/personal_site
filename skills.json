@@ -11,7 +11,7 @@
 
         {"name":"Robotics", "dist":0, "links":[], "group":0, "color":"white",
             "instr": ""},
-        {"name":"Robot Interface", "dist":0, "links":[], "group":1, "color":"yellow",
+        {"name":"Robot Interface", "dist":0, "links":[], "group":1, "color":"pink",
             "instr": "http://www.active.com/health/articles/pose-of-the-month-pigeon-pose"},
         {"name":"Robot Interface 2", "dist":0, "links":[], "group":1, "color":"yellow",
             "instr": "http://www.gaia.com/pose/lizard-pose-utthan-pristhasana"},
