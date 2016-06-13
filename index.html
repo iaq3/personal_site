@@ -127,7 +127,7 @@ d3.json("skills.json", function(error, json) {
   node.append("text") //text for each node, size, offset, and color
       .attr("dx", 12)
       .attr("dy", ".35em")
-      .attr("fill", "white")//func [ node_click ] instead of "white" here for color to make the text same as node
+      .attr("fill", function(d){if (d.group == 0) return white; return yellow;})//func [ node_click ] instead of "white" here for color to make the text same as node
       .text(function(d) { return d.name })
       //.on("click", node_click)
 
