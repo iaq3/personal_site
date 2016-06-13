@@ -30,11 +30,6 @@ console.log("Starting new script")
 var width = 960, //size constants, if you want to edit the size, change only these
     height = 500,
 
-    //group color constants-- number is equal to the group in skills.json
-    group0_color = "white",
-    group1_color = "yellow",
-    group2_color = "orange",
-    group3_color = "red"
 
 
 var svg = d3.select("body").append("svg") //sets size for webbrowser
@@ -117,19 +112,10 @@ d3.json("skills.json", function(error, json) {
 
   function node_color(d) {
 
-    if (d.group == 0) {
-      return group0_color
+    if (d.color != null) {
+      return d.color
     }
-    if (d.group == 1) {
-      return group1_color
-    }
-    if (d.group == 2) {
-      return group2_color
-    }
-    if (d.group == 3) {
-      return group3_color
-    }
-    return "gray" //ideally just get color of d
+    return "magenta" //ideally just get color of d
   }
 
   function node_opacity(n) {
